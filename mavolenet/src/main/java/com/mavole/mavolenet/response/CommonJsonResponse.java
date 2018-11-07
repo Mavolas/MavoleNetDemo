@@ -8,6 +8,7 @@ import com.mavole.mavolenet.ZirukHttpClient;
 import com.mavole.mavolenet.callback.DisposeDataListener;
 import com.mavole.mavolenet.exception.ZirukHttpException;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,23 +25,14 @@ import okhttp3.Response;
  */
 public class CommonJsonResponse {
 
-
-    protected final String RESULT_CODE = "RequestStatus"; // 有返回则对于http请求来说是成功的，但还有可能是业务逻辑上的错误
-    protected final int RESULT_CODE_VALUE = 0;
-    protected final String ERROR_MSG = "emsg";
-    protected final String EMPTY_MSG = "";
-    protected final String COOKIE_STORE = "Set-Cookie"; // decide the server it
-
-
-    protected final int NETWORK_ERROR = -1; // the network relative error
-    protected final int JSON_ERROR = -2; // the JSON relative error
-    protected final String NETWORK_ERROR_MSG = "network_code_fail"; // the network relative error
-
+    private static final int NETWORK_ERROR = -1; // the network relative error
+    private static final int JSON_ERROR = -2; // the JSON relative error
+    private static final String EMPTY_MSG = "CONTENT_IS_NULL";
+    private static final String NETWORK_ERROR_MSG = "NETWORK_CODE_FAIL"; // the network relative error
 
     private Handler mHandler ;
     private Gson mGson;
     private static CommonJsonResponse mInstance;
-
 
     private CommonJsonResponse(){
 
@@ -96,7 +88,7 @@ public class CommonJsonResponse {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, final Response response) throws IOException {
 
                 if(response.isSuccessful()){
 
@@ -121,7 +113,7 @@ public class CommonJsonResponse {
                         @Override
                         public void run() {
 
-                            callback.onFailure(new ZirukHttpException(NETWORK_ERROR, NETWORK_ERROR_MSG));
+                            callback.onFailure(new ZirukHttpException(NETWORK_ERROR, NETWORK_ERROR_MSG +" : "+ response.code()));
                         }
                     });
                 }
@@ -143,22 +135,30 @@ public class CommonJsonResponse {
             return;
         }
 
-        if(callback.mType==null || callback.mType==String.class){
+        if(callback.mType == null || callback.mType == String.class){
 
             callback.onSuccess(responseObj);
         }
         else {
 
             try {
-                JSONObject result = new JSONObject(responseObj.toString());
 
+                JSONObject result = new JSONObject(responseObj.toString());
                 callback.onSuccess(mGson.fromJson(responseObj.toString(),callback.mType));
 
+            } catch (JSONException eo) {
 
-            } catch (JSONException e) {
+                try{
 
-                callback.onFailure(new ZirukHttpException(JSON_ERROR, e.getMessage()));
-                e.printStackTrace();
+                    JSONArray result = new JSONArray(responseObj.toString());
+                    callback.onSuccess(mGson.fromJson(responseObj.toString(),callback.mType));
+
+                }catch (JSONException ea){
+
+                    callback.onFailure(new ZirukHttpException(JSON_ERROR, ea.getMessage()));
+                    ea.printStackTrace();
+
+                }
             }
 
         }

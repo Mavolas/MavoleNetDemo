@@ -2,93 +2,151 @@ package com.mavole.mavolenetdemo;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import com.mavole.mavolenet.ZirukHttpClient;
+import com.mavole.mavolenet.callback.DisposeDataListener;
 import com.mavole.mavolenet.exception.ZirukHttpException;
+import com.mavole.mavolenet.model.ResponseCls;
 import com.mavole.mavolenet.request.RequestParams;
+import com.mavole.mavolenetdemo.bean.FileInfo;
+import com.mavole.mavolenetdemo.bean.UserBean;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.List;
+
+import cn.finalteam.rxgalleryfinal.RxGalleryFinalApi;
+import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultDisposable;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    String filePath = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
 
-
-    private void LoadData(boolean loadingMore){
+    public void RequestGet(View view){
 
         RequestParams params=new RequestParams();
-
-        params.put("userid", CurrentUserInfoUtils.GetUserName(mContext));
-        params.put("password",CurrentUserInfoUtils.getPassword(mContext));
-        params.put("currentUser",CurrentUserInfoUtils.getGUID(mContext));
-        params.put("SreenType",mHomeSend.ScreenType);
-        params.put("depart",mFilterBean.getDepartment());
-        params.put("storageType", mFilterBean.getStatus());
-        params.put("Name",mFilterBean.getBidingName());
-        params.put("Num",mFilterBean.getBidingCode());
-
-        if (loadingMore){
-            params.put("pageIndex",String.valueOf(pageIndex+1));
-        }else {
-            params.put("pageIndex",String.valueOf(0));
-        }
-
-        params.put("pageSize","10");
-
-//        if (mFilterBean.getDayFrom() != null)
-//            params.put("from",DateFormatUtils.format(mFilterBean.getDayFrom(), "yyyy/MM/dd"));
-//        if (mFilterBean.getDayTo() != null)
-//            params.put("to",DateFormatUtils.format(mFilterBean.getDayTo(), "yyyy/MM/dd"));
-
+        params.put("userid", "123");
 
         ZirukHttpClient.newBuilder()
                 .addParams(params)
-                .setContext(mContext)
+                .setContext(MainActivity.this)
                 .post()
-                .url("/Purchase/Index")
+                .url("getUserInfo")
                 .build()
-                .enqueue(new DisposeDataListener<ResponseCls<List<PurchaseInfo>>>() {
+                .enqueue(new DisposeDataListener<ResponseCls<UserBean>>() {
 
                     @Override
-                    public void onSuccess(ResponseCls<List<PurchaseInfo>> response) {
+                    public void onSuccess(ResponseCls<UserBean> response) {
 
-                        mRefreshLayout.finishRefresh();
-                        mRefreshLayout.finishLoadMore();
+                        Toast.makeText(MainActivity.this, response.getData().userId,Toast.LENGTH_SHORT).show();
 
-                        if ("0".equals(response.getRequestStatus()))
-                        {
-                            if (response.getData() == null || response.getData().size()<=0) {
-                                ToastUtil.showToastShort("未检索到数据！");
-                            }
-                            else {
-
-                                mList.addAll(response.getData());
-                                myAdapter.notifyDataSetChanged();
-                                pageIndex = response.pageInfo.PageIndex;
-
-                            }
-                        }
-                        else if ("1".equals(response.getRequestStatus())) {
-                            ToastUtil.showToastShort("账号密码不正确，请退出系统重新登录！");
-                        }
-                        else {
-                            ToastUtil.showToastShort("系统错误，请与管理员联系！");
-                        }
                     }
 
                     @Override
                     public void onFailure(ZirukHttpException e) {
                         super.onFailure(e);
 
-                        mRefreshLayout.finishRefresh();
-                        mRefreshLayout.finishLoadMore();
+                        Toast.makeText(MainActivity.this, e.getEmsg().toString(),Toast.LENGTH_SHORT).show();
 
-                        ToastUtil.showToastShort("无法连接至服务器！");
                     }
 
                 });
+    }
+
+    public void FileChoose(View view){
+
+        RxGalleryFinalApi instance = RxGalleryFinalApi.getInstance(MainActivity.this);
+
+        //设置自定义的参数
+        instance
+                .setType(RxGalleryFinalApi.SelectRXType.TYPE_IMAGE, RxGalleryFinalApi.SelectRXType.TYPE_SELECT_RADIO)
+                .setImageRadioResultEvent(new RxBusResultDisposable<ImageRadioResultEvent>() {
+                    @Override
+                    protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
+
+                        Toast.makeText( MainActivity.this, "图片选择" +imageRadioResultEvent.getResult().getThumbnailBigPath() ,Toast.LENGTH_SHORT).show();
+
+                        filePath = imageRadioResultEvent.getResult().getThumbnailBigPath();
+
+                        //ToastUtil.showToastShort( "图片选择" +imageRadioResultEvent.getResult().getThumbnailBigPath());
+                        //Glide.with(getActivity()).load("file://" +imageRadioResultEvent.getResult().getThumbnailSmallPath() ).into(simpleDraweeView);
+
+                    }
+                }).open();
+
+
+    }
+
+    public void FileUpload(View view) throws FileNotFoundException {
+
+        //final HashMap<String, File> files = new HashMap<String, File>();
+        File file = new File(filePath);
+
+        RequestParams params=new RequestParams();
+        params.put("userId", "123");
+        params.put("password", "123");
+        params.put("ID", "123");
+        params.put(StringUtils.substringAfterLast(filePath, "/"), file);
+
+        ZirukHttpClient.newBuilder()
+                .addParams(params)
+                .setContext(MainActivity.this)
+                .postWithFiles()
+                .url("File/FileUpload")
+                .build()
+                .enqueue(new DisposeDataListener<List<FileInfo>>() {
+
+                    @Override
+                    public void onSuccess(List<FileInfo> response) {
+
+                        Toast.makeText(MainActivity.this, response.get(0).downlaodPathFile,Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onFailure(ZirukHttpException e) {
+                        super.onFailure(e);
+
+                        Toast.makeText(MainActivity.this, "失败了"+e.getEmsg(),Toast.LENGTH_SHORT).show();
+
+                    }
+
+                });
+
+
+    }
+
+    public void FileUploads(View view){
+
+        RxGalleryFinalApi instance = RxGalleryFinalApi.getInstance(MainActivity.this);
+
+        //设置自定义的参数
+        instance
+                .setType(RxGalleryFinalApi.SelectRXType.TYPE_IMAGE, RxGalleryFinalApi.SelectRXType.TYPE_SELECT_RADIO)
+                .setImageRadioResultEvent(new RxBusResultDisposable<ImageRadioResultEvent>() {
+                    @Override
+                    protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
+
+                        Toast.makeText( MainActivity.this, "图片选择" +imageRadioResultEvent.getResult().getThumbnailBigPath() ,Toast.LENGTH_SHORT).show();
+
+                        //ToastUtil.showToastShort( "图片选择" +imageRadioResultEvent.getResult().getThumbnailBigPath());
+                        //Glide.with(getActivity()).load("file://" +imageRadioResultEvent.getResult().getThumbnailSmallPath() ).into(simpleDraweeView);
+
+                    }
+                }).open();
+
+
     }
 
 }

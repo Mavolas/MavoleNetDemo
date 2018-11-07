@@ -4,14 +4,17 @@ package com.mavole.mavolenet;
 import android.content.Context;
 
 import com.mavole.mavolenet.callback.DisposeDataListener;
+import com.mavole.mavolenet.common.Method;
 import com.mavole.mavolenet.netconfig.ConfigType;
 import com.mavole.mavolenet.netconfig.MavoHttp;
 import com.mavole.mavolenet.request.RequestParams;
 import com.mavole.mavolenet.response.CommonJsonResponse;
-import com.mavole.mavolenet.utils.HttpsUtils;
-import com.mavole.mavolenet.utils.StringUtils;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 import java.util.Map;
 
 import okhttp3.FormBody;
@@ -49,7 +52,6 @@ public class ZirukHttpClient {
         return mInstance;
     }
 
-
     private ZirukHttpClient(OkHttpClient okHttpClient){
         this.mOkHttpClient=okHttpClient;
     }
@@ -59,19 +61,18 @@ public class ZirukHttpClient {
         this.mBuilder = builder;
     }
 
-
     public Request buildRequest(){
 
        Request.Builder builder =  new Request.Builder();
 
 
-        if(mBuilder.method=="GET") {
+        if(mBuilder.method==Method.GET) {
 
             builder.url(buildGetRequest());
             builder.get();
         }
 
-        else if (mBuilder.method =="POST"){
+        else if (mBuilder.method == Method.POST){
 
             try {
                 builder.post(buildPostRequest());
@@ -83,7 +84,7 @@ public class ZirukHttpClient {
             builder.url(mBuilder.url);
         }
 
-        else if (mBuilder.method =="POSTWITHFILES"){
+        else if (mBuilder.method == Method.POSTWITHFILES){
 
             try {
                 builder.post(buildMultiPostRequest());
@@ -92,7 +93,7 @@ public class ZirukHttpClient {
                 e.printStackTrace();
             }
 
-            builder.url(mBuilder.url);
+            builder.url(buildGetRequest());
         }
 
         return builder.build();
@@ -102,7 +103,7 @@ public class ZirukHttpClient {
 
         StringBuilder urlBuilder = new StringBuilder(mBuilder.url).append("?");
         if ( Builder.mRequestParams != null) {
-            for (Map.Entry<String, String> entry : Builder.mRequestParams.urlParams.entrySet()) {
+            for (Map.Entry<String, String> entry : Builder.mRequestParams.mPathParams.entrySet()) {
                 urlBuilder.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
             }
         }
@@ -115,7 +116,7 @@ public class ZirukHttpClient {
 
         FormBody.Builder mFormBodyBuild = new FormBody.Builder();
         if ( Builder.mRequestParams != null) {
-            for (Map.Entry<String, String> entry : Builder.mRequestParams.urlParams.entrySet()) {
+            for (Map.Entry<String, String> entry : Builder.mRequestParams.mPathParams.entrySet()) {
                 mFormBodyBuild.add(entry.getKey(), entry.getValue());
             }
         }
@@ -130,10 +131,19 @@ public class ZirukHttpClient {
         requestBody.setType(MultipartBody.FORM);
         if ( Builder.mRequestParams != null) {
 
-            for (Map.Entry<String, Object> entry : Builder.mRequestParams.fileParams.entrySet()) {
+            for (Map.Entry<String, Object> entry : Builder.mRequestParams.mFileParams.entrySet()) {
+
                 if (entry.getValue() instanceof File) {
-                    requestBody.addPart(Headers.of("Content-Disposition", "form-data; name=\"" + entry.getKey() + "\""),
-                            RequestBody.create(FILE_TYPE, (File) entry.getValue()));
+
+                    String fileType = getMimeType(entry.getKey());
+
+                    MediaType parse = MediaType.parse(fileType);
+
+//                    requestBody.addFormDataPart(Headers.of("Content-Disposition", "form-data; name=\"" + entry.getKey() + "\""),
+//                           );
+
+                    requestBody.addFormDataPart("img",entry.getKey(), RequestBody.create(MediaType.parse(fileType), (File) entry.getValue()));
+
                 } else if (entry.getValue() instanceof String) {
 
                     requestBody.addPart(Headers.of("Content-Disposition", "form-data; name=\"" + entry.getKey() + "\""),
@@ -143,6 +153,23 @@ public class ZirukHttpClient {
         }
         return requestBody.build();
     }
+
+
+    /**
+     * 获取文件MimeType
+     *
+     * @param filename
+     * @return
+     */
+    private static String getMimeType(String filename) {
+        FileNameMap filenameMap = URLConnection.getFileNameMap();
+        String contentType = filenameMap.getContentTypeFor(filename);
+        if (contentType == null) {
+            contentType = "application/octet-stream"; //* exe,所有的可执行程序
+        }
+        return contentType;
+    }
+
 
     /**
      * 异步请求
@@ -162,7 +189,7 @@ public class ZirukHttpClient {
     public static class Builder{
 
         private String url;
-        private String method;
+        private int method;
         private Context mContext;
         protected static RequestParams mRequestParams;
 
@@ -183,7 +210,7 @@ public class ZirukHttpClient {
 
         private Builder(){
 
-            method = "GET";
+            method = Method.GET;
         }
 
 
@@ -204,18 +231,18 @@ public class ZirukHttpClient {
          */
         public Builder url(String actionUrl){
 
-            String urlRoot = "";
+            String fullUrl = "";
 
-            if ( StringUtils.isBlank(urlRoot)) {
-                 urlRoot = ( String ) MavoHttp.getConfigurations().get( ConfigType.API_HOST.name() );
+            if ( StringUtils.isBlank(fullUrl)) {
+                 fullUrl = ( String ) MavoHttp.getConfigurations().get( ConfigType.API_HOST.name() );
+                 if (! StringUtils.endsWith(fullUrl,"/")){
+                     fullUrl += "/";
+                 }
             }
-
-            String fullUrl = urlRoot;
-
             if ( StringUtils.startsWith(actionUrl, "/"))
                 actionUrl = StringUtils.right(actionUrl, actionUrl.length()-1);
-            fullUrl += actionUrl;
 
+            fullUrl += actionUrl;
             this.url = fullUrl;
             return this;
         }
@@ -228,7 +255,6 @@ public class ZirukHttpClient {
         public Builder addParams(RequestParams requestParams){
 
             this.mRequestParams=requestParams;
-
             return this;
 
         }
@@ -239,7 +265,7 @@ public class ZirukHttpClient {
          */
         public Builder get(){
 
-            method="GET";
+            method = Method.GET;
             return this;
         }
 
@@ -249,7 +275,7 @@ public class ZirukHttpClient {
          */
         public Builder post(){
 
-            method="POST";
+            method = Method.POST;
             return this;
         }
 
@@ -259,9 +285,10 @@ public class ZirukHttpClient {
          */
         public Builder postWithFiles(){
 
-            method="POSTWITHFILES";
+            method = Method.POSTWITHFILES;
             return this;
         }
+
 
 
     }

@@ -8,8 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public  class RequestParams {
 
-	public ConcurrentHashMap<String, String> urlParams = new ConcurrentHashMap<String, String>();
-	public ConcurrentHashMap<String, Object> fileParams = new ConcurrentHashMap<String, Object>();
+	public ConcurrentHashMap<String, String> mPathParams = new ConcurrentHashMap<String, String>();
+	public ConcurrentHashMap<String, Object> mFileParams = new ConcurrentHashMap<String, Object>();
 
 	/**
 	 * Constructs a new empty {@code RequestParams} instance.
@@ -60,14 +60,14 @@ public  class RequestParams {
 	 */
 	public void put(String key, String value) {
 		if (key != null && value != null) {
-			urlParams.put(key, value);
+			mPathParams.put(key, value);
 		}
 	}
 
 	public void put(String key, Object object) throws FileNotFoundException {
 
 		if (key != null) {
-			fileParams.put(key, object);
+			mFileParams.put(key, object);
 		}
 	}
 }

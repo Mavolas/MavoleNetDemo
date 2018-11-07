@@ -1,9 +1,7 @@
 package com.mavole.mavolenet.exception;
 
 
-public class ZirukHttpException extends Exception {
-
-	private static final long serialVersionUID = 1L;
+public class ZirukHttpException {
 
 	private int ecode;
 
