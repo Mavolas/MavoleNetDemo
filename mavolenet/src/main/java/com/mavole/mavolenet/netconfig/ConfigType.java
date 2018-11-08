@@ -1,7 +1,7 @@
 package com.mavole.mavolenet.netconfig;
 
 /**
- * Created by 宋棋安
+ * Created by mavole
  * on 2018/9/20.
  */
 public enum ConfigType {
@@ -9,7 +9,6 @@ public enum ConfigType {
     APPLICATION_CONTEXT,
     OKHTTPCLIENT,
     CONFIG_READY,
-    API_HOST,
-    TIMEOUT
+    API_HOST
 
 }

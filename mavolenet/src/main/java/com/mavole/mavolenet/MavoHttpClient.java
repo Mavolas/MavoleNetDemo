@@ -18,7 +18,6 @@ import java.net.URLConnection;
 import java.util.Map;
 
 import okhttp3.FormBody;
-import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -26,37 +25,35 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 /**
- * Created by 宋棋安
+ * Created by mavole
  * on 2018/7/4.
  */
-public class ZirukHttpClient {
+public class MavoHttpClient {
 
     private Builder mBuilder;
     private OkHttpClient mOkHttpClient;
-    private volatile static ZirukHttpClient mInstance = null;
+    private volatile static MavoHttpClient mInstance = null;
 
-    private static final MediaType FILE_TYPE = MediaType.parse("application/octet-stream");
-
-    public static ZirukHttpClient initClient(OkHttpClient okHttpClient) {
+    public static MavoHttpClient initClient(OkHttpClient okHttpClient) {
 
         if (mInstance == null)
         {
-            synchronized (ZirukHttpClient.class)
+            synchronized (MavoHttpClient.class)
             {
                 if (mInstance == null)
                 {
-                    mInstance = new ZirukHttpClient(okHttpClient);
+                    mInstance = new MavoHttpClient(okHttpClient);
                 }
             }
         }
         return mInstance;
     }
 
-    private ZirukHttpClient(OkHttpClient okHttpClient){
+    private MavoHttpClient(OkHttpClient okHttpClient){
         this.mOkHttpClient=okHttpClient;
     }
 
-    private ZirukHttpClient(OkHttpClient okHttpClient,Builder builder){
+    private MavoHttpClient(OkHttpClient okHttpClient, Builder builder){
         this.mOkHttpClient=okHttpClient;
         this.mBuilder = builder;
     }
@@ -136,18 +133,11 @@ public class ZirukHttpClient {
                 if (entry.getValue() instanceof File) {
 
                     String fileType = getMimeType(entry.getKey());
-
-                    MediaType parse = MediaType.parse(fileType);
-
-//                    requestBody.addFormDataPart(Headers.of("Content-Disposition", "form-data; name=\"" + entry.getKey() + "\""),
-//                           );
-
-                    requestBody.addFormDataPart("img",entry.getKey(), RequestBody.create(MediaType.parse(fileType), (File) entry.getValue()));
+                    requestBody.addFormDataPart(entry.getKey(),entry.getKey(), RequestBody.create(MediaType.parse(fileType), (File) entry.getValue()));
 
                 } else if (entry.getValue() instanceof String) {
 
-                    requestBody.addPart(Headers.of("Content-Disposition", "form-data; name=\"" + entry.getKey() + "\""),
-                            RequestBody.create(null, (String) entry.getValue()));
+                    requestBody.addFormDataPart( entry.getKey(), (String) entry.getValue());
                 }
             }
         }
@@ -156,7 +146,7 @@ public class ZirukHttpClient {
 
 
     /**
-     * 获取文件MimeType
+     *
      *
      * @param filename
      * @return
@@ -165,14 +155,14 @@ public class ZirukHttpClient {
         FileNameMap filenameMap = URLConnection.getFileNameMap();
         String contentType = filenameMap.getContentTypeFor(filename);
         if (contentType == null) {
-            contentType = "application/octet-stream"; //* exe,所有的可执行程序
+            contentType = "application/octet-stream"; //* exe,
         }
         return contentType;
     }
 
 
     /**
-     * 异步请求
+     *
      * @param callback
      */
     public void enqueue(DisposeDataListener callback){
@@ -193,13 +183,13 @@ public class ZirukHttpClient {
         private Context mContext;
         protected static RequestParams mRequestParams;
 
-        public ZirukHttpClient build(){
+        public MavoHttpClient build(){
 
-            synchronized (ZirukHttpClient.class)
+            synchronized (MavoHttpClient.class)
             {
                 if (mInstance == null)
                 {
-                    mInstance = new ZirukHttpClient(new OkHttpClient(),this);
+                    mInstance = new MavoHttpClient(new OkHttpClient(),this);
 
                 }else {
                     mInstance.mBuilder=this;
@@ -215,7 +205,7 @@ public class ZirukHttpClient {
 
 
         /**
-         * 上下文对象
+         *
          * @param context
          * @return
          */
@@ -225,7 +215,7 @@ public class ZirukHttpClient {
         }
 
         /**
-         * 请求的url 地址
+         *
          * @param actionUrl
          * @return
          */
@@ -248,7 +238,7 @@ public class ZirukHttpClient {
         }
 
         /**
-         * 添加请求参数
+         *
          * @param requestParams
          * @return
          */
@@ -260,7 +250,7 @@ public class ZirukHttpClient {
         }
 
         /**
-         * Get 请求
+         *
          * @return
          */
         public Builder get(){
@@ -270,7 +260,7 @@ public class ZirukHttpClient {
         }
 
         /**
-         * Post 请求
+         *
          * @return
          */
         public Builder post(){
@@ -280,7 +270,7 @@ public class ZirukHttpClient {
         }
 
         /**
-         * 带文件的Post请求
+         *
          * @return
          */
         public Builder postWithFiles(){

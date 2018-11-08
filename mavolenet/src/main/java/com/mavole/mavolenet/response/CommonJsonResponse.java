@@ -4,7 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.google.gson.Gson;
-import com.mavole.mavolenet.ZirukHttpClient;
+import com.mavole.mavolenet.MavoHttpClient;
 import com.mavole.mavolenet.callback.DisposeDataListener;
 import com.mavole.mavolenet.exception.ZirukHttpException;
 
@@ -20,7 +20,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
 /**
- * Created by 宋棋安
+ * Created by mavole
  * on 2018/7/4.
  */
 public class CommonJsonResponse {
@@ -51,12 +51,12 @@ public class CommonJsonResponse {
 
 
     /**
-     * OkHTTP 请求逻辑
+     * OkHTTP
      * @param okHttpClient OkHttpClient
-     * @param client 封装请求的全部数据
-     * @param callback 回调方法
+     * @param client
+     * @param callback
      */
-    public void request(OkHttpClient okHttpClient, ZirukHttpClient client, final DisposeDataListener callback){
+    public void request(OkHttpClient okHttpClient, MavoHttpClient client, final DisposeDataListener callback){
 
         if(okHttpClient == null){
 
@@ -124,9 +124,9 @@ public class CommonJsonResponse {
     }
 
     /**
-     * 处理返回结果
+     *
      * @param callback
-     * @param responseObj 返回的body字符串数据
+     * @param responseObj
      */
     private void handleResponse(final DisposeDataListener callback, final Object responseObj){
 

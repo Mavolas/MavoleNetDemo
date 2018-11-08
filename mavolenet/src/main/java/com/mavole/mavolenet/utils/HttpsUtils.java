@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
 import static android.content.Context.WIFI_SERVICE;
 
 /**
- * Created by 宋棋安
+ * Created by mavole
  * on 2018/7/4.
  */
 public class HttpsUtils {

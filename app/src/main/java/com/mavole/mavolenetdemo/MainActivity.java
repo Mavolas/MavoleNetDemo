@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mavole.mavolenet.ZirukHttpClient;
+import com.mavole.mavolenet.MavoHttpClient;
 import com.mavole.mavolenet.callback.DisposeDataListener;
 import com.mavole.mavolenet.exception.ZirukHttpException;
 import com.mavole.mavolenet.model.ResponseCls;
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         RequestParams params=new RequestParams();
         params.put("userid", "123");
 
-        ZirukHttpClient.newBuilder()
+        MavoHttpClient.newBuilder()
                 .addParams(params)
                 .setContext(MainActivity.this)
                 .post()
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         params.put("ID", "123");
         params.put(StringUtils.substringAfterLast(filePath, "/"), file);
 
-        ZirukHttpClient.newBuilder()
+        MavoHttpClient.newBuilder()
                 .addParams(params)
                 .setContext(MainActivity.this)
                 .postWithFiles()
@@ -130,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
     public void FileUploads(View view){
 
         RxGalleryFinalApi instance = RxGalleryFinalApi.getInstance(MainActivity.this);
-
         //设置自定义的参数
         instance
                 .setType(RxGalleryFinalApi.SelectRXType.TYPE_IMAGE, RxGalleryFinalApi.SelectRXType.TYPE_SELECT_RADIO)
@@ -145,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 }).open();
-
 
     }
 

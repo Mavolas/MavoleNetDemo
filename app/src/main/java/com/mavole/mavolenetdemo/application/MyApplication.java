@@ -2,15 +2,7 @@ package com.mavole.mavolenetdemo.application;
 
 import android.app.Application;
 
-import com.mavole.mavolenet.ZirukHttpClient;
 import com.mavole.mavolenet.netconfig.MavoHttp;
-
-import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
-
-import okhttp3.OkHttpClient;
 
 /**
  * Created by 宋棋安

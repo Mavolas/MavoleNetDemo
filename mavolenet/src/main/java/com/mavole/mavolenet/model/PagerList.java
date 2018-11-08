@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Author by 宋棋安, Email sgngqian@sina.com
+ * Author by mavole, Email sgngqian@sina.com
  * Date on 2018/11/7.
  */
 public class PagerList <T> {

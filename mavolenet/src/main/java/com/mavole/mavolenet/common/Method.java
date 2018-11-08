@@ -1,7 +1,7 @@
 package com.mavole.mavolenet.common;
 
 /**
- * Author by 宋棋安, Email sgngqian@sina.com
+ * Author by mavole, Email sgngqian@sina.com
  * Date on 2018/11/6.
  */
 public interface Method {
