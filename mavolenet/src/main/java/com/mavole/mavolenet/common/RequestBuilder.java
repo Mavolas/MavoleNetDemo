@@ -10,14 +10,6 @@ import okhttp3.OkHttpClient;
  */
 public interface RequestBuilder {
 
-    RequestBuilder addPathParameter(String key, String value);
 
-    RequestBuilder addPathParameter(Map<String, String> pathParameterMap);
-
-    RequestBuilder addFormParameter(String key, Object value);
-
-    RequestBuilder addFormParameter(Map<String, Object> queryParameterMap);
-
-    RequestBuilder setOkHttpClient(OkHttpClient okHttpClient);
 
 }
