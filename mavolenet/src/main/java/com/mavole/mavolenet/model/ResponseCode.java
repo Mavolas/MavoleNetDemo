@@ -11,6 +11,4 @@ public enum ResponseCode {
     invalidInput,
     systemerror;
 
-    private ResponseCode() {
-    }
 }

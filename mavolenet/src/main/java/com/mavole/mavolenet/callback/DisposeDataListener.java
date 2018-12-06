@@ -3,13 +3,8 @@ package com.mavole.mavolenet.callback;
 import com.google.gson.internal.$Gson$Types;
 import com.mavole.mavolenet.exception.CommonHttpException;
 
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class DisposeDataListener<T> {
 
