@@ -2,12 +2,16 @@ package com.mavole.mavolenetdemo;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.mavole.mavolenet.RestClient;
 import com.mavole.mavolenet.callback.DisposeDataListener;
+import com.mavole.mavolenet.configure.ConfigType;
+import com.mavole.mavolenet.configure.MavoHttpConfigure;
 import com.mavole.mavolenet.exception.CommonHttpException;
+import com.mavole.mavolenet.model.FileBean;
 import com.mavole.mavolenet.model.ResponseCls;
 import com.mavole.mavolenetdemo.bean.FileInfo;
 import com.mavole.mavolenetdemo.bean.UserBean;
@@ -16,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Date;
 import java.util.List;
 
 import cn.finalteam.rxgalleryfinal.RxGalleryFinalApi;
@@ -25,61 +30,105 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 public class MainActivity extends AppCompatActivity {
 
 
+    private static String TAG = MainActivity.class.getSimpleName();
+
     String filePath = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        //Log.d(TAG, timeout +"timeout");
     }
 
     public void RequestGet(View view){
 
-//        RequestParams params=new RequestParams();
-//        params.put("userid", "123");
-//
-//        MavoHttpClient.newBuilder()
-//                .addParams(params)
-//                .setContext(MainActivity.this)
-//                .post()
-//                .url("getUserInfo")
-//                .build()
-//                .enqueue(new DisposeDataListener<ResponseCls<UserBean>>() {
-//
-//                    @Override
-//                    public void onSuccess(ResponseCls<UserBean> response) {
-//
-//                        Toast.makeText(MainActivity.this, response.getData().userId,Toast.LENGTH_SHORT).show();
-//
-//                    }
-//
-//                    @Override
-//                    public void onFailure(CommonHttpException e) {
-//                        super.onFailure(e);
-//
-//                        Toast.makeText(MainActivity.this, e.getEmsg().toString(),Toast.LENGTH_SHORT).show();
-//
-//                    }
-//
-//                });
 
-        RestClient.builder("http://")
-                .addQueryParams("userId","123")
-                .addQueryParams("password", "234")
+        RestClient.builder("DataSynch/getUserFlag")
+                .addQueryParams("userId","test")
+                .addQueryParams("password", "test")
+                .addQueryParams("flag", "3")
                 .get()
-                .enqueue(new DisposeDataListener<ResponseCls<FileInfo>>(){
+                .enqueue(new DisposeDataListener<ResponseCls<UserBean>>(){
 
                     @Override
-                    public void onSuccess(ResponseCls<FileInfo> fileInfoResponseCls) {
-                        super.onSuccess(fileInfoResponseCls);
+                    public void onSuccess(ResponseCls<UserBean> userResponseCls) {
+                        super.onSuccess(userResponseCls);
+                        Log.d(TAG, userResponseCls.getData().toString());
                     }
 
                     @Override
                     public void onFailure(CommonHttpException e) {
                         super.onFailure(e);
+                        Log.d(TAG, e.getEmsg().toString());
                     }
 
                 });
 
+    }
+
+
+    public void PostJson(View view){
+
+
+        RestClient.builder("DataSynch/Download")
+                .addQueryParams("userId","test")
+                .addQueryParams("password", "test")
+                .addPostParams("lastUpdateTimeMaster", new Date())
+                .addPostParams("lastUpdateTimeTrans", new Date())
+                .postJson()
+                .enqueue(new DisposeDataListener<ResponseCls<UserBean>>(){
+
+                    @Override
+                    public void onSuccess(ResponseCls<UserBean> userResponseCls) {
+                        //super.onSuccess(userResponseCls);
+
+                        Log.d(TAG, userResponseCls.getData().toString());
+                    }
+
+                    @Override
+                    public void onFailure(CommonHttpException e) {
+                        super.onFailure(e);
+                        Log.d(TAG, e.getEmsg().toString());
+                    }
+
+                });
+
+    }
+
+    public void PostWithFiles(View view){
+
+        FileBean fileBean = new FileBean();
+        fileBean.fileName = "我是文件名";
+        fileBean.file = new File(filePath);
+        fileBean.key = "我是KEY";
+
+
+
+
+
+        RestClient.builder("DataSynch/upLoadFiles")
+                .addQueryParams("userId","test")
+                .addQueryParams("password", "test")
+                .addQueryParams("flag", "3")
+                .addPostParams("我是KEY" ,fileBean)
+                .postWithFiles()
+                .enqueue(new DisposeDataListener<ResponseCls<UserBean>>(){
+
+                    @Override
+                    public void onSuccess(ResponseCls<UserBean> userResponseCls) {
+                        super.onSuccess(userResponseCls);
+                        Log.d(TAG, userResponseCls.getData().toString());
+                    }
+
+                    @Override
+                    public void onFailure(CommonHttpException e) {
+                        super.onFailure(e);
+                        Log.d(TAG, e.getEmsg().toString());
+                    }
+
+                });
 
     }
 

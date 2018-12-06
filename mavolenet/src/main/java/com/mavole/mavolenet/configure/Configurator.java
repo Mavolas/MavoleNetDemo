@@ -90,11 +90,10 @@ public class Configurator {
         return this;
     }
 
-//    public final Configurator withOKHttpClient(OkHttpClient okHttpClient){
-//
-//        MAVO_CONFIGS.put( ConfigType.OKHTTPCLIENT.name(), okHttpClient );
-//        return this;
-//    }
+    public final Configurator withOKHttpClient(OkHttpClient okHttpClient){
+        MAVO_CONFIGS.put( ConfigType.OKHTTP_CLIENT.name(), okHttpClient );
+        return this;
+    }
 
 }
 

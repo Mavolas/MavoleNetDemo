@@ -1,23 +1,27 @@
 package com.mavole.mavolenetdemo.bean;
 
+import java.util.Date;
+
 public class UserBean {
 
-    public String userId;
-    public String photoUrl;
-    public String name;
-    public String tick;
-    public String mobile;
-    public String platform;
+    public String UserName;
+
+    public String PassWord;
+
+    public String Flag;
+
+    public Date BirtyDay;
+
+    public int Age;
 
     @Override
     public String toString() {
         return "UserBean{" +
-                "userId='" + userId + '\'' +
-                ", photoUrl='" + photoUrl + '\'' +
-                ", name='" + name + '\'' +
-                ", tick='" + tick + '\'' +
-                ", mobile='" + mobile + '\'' +
-                ", platform='" + platform + '\'' +
+                "UserName='" + UserName + '\'' +
+                ", PassWord='" + PassWord + '\'' +
+                ", Flag='" + Flag + '\'' +
+                ", BirtyDay=" + BirtyDay +
+                ", Age=" + Age +
                 '}';
     }
 }

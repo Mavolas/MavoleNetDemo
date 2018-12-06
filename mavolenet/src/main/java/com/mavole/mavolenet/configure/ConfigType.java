@@ -8,6 +8,7 @@ public enum ConfigType {
 
     APPLICATION_CONTEXT,
     CONFIG_READY,
+    OKHTTP_CLIENT,
     INTERCEPTOR,
     API_HOST,
     TIMEOUT

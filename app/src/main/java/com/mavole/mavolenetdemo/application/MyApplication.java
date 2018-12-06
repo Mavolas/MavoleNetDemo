@@ -29,8 +29,8 @@ public class MyApplication extends Application {
 //                .build();
 
         MavoHttpConfigure.init(this)
-                .withApiHost("http://172.17.0.172:59596/api")
-                .withTimeOut(60)
+                .withApiHost("http://172.17.0.172:49842/api/")
+                .withTimeOut(40)
                 .configure();
 
     }

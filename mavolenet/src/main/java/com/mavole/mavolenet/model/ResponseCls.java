@@ -22,7 +22,6 @@ public class ResponseCls<T> {
         } else {
             this.status = false;
         }
-
     }
 
     public Boolean HasWebServerError() {

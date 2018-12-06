@@ -1,10 +1,8 @@
 package com.mavole.mavolenet.common;
 
-import android.content.Context;
-
 import com.google.gson.Gson;
-import com.mavole.mavolenet.model.FileBean;
 import com.mavole.mavolenet.RestClient;
+import com.mavole.mavolenet.model.FileBean;
 
 import java.io.File;
 import java.net.FileNameMap;
