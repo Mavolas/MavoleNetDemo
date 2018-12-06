@@ -5,11 +5,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mavole.mavolenet.MavoHttpClient;
+import com.mavole.mavolenet.RestClient;
 import com.mavole.mavolenet.callback.DisposeDataListener;
-import com.mavole.mavolenet.exception.ZirukHttpException;
+import com.mavole.mavolenet.exception.CommonHttpException;
 import com.mavole.mavolenet.model.ResponseCls;
-import com.mavole.mavolenet.request.RequestParams;
 import com.mavole.mavolenetdemo.bean.FileInfo;
 import com.mavole.mavolenetdemo.bean.UserBean;
 
@@ -35,33 +34,53 @@ public class MainActivity extends AppCompatActivity {
 
     public void RequestGet(View view){
 
-        RequestParams params=new RequestParams();
-        params.put("userid", "123");
+//        RequestParams params=new RequestParams();
+//        params.put("userid", "123");
+//
+//        MavoHttpClient.newBuilder()
+//                .addParams(params)
+//                .setContext(MainActivity.this)
+//                .post()
+//                .url("getUserInfo")
+//                .build()
+//                .enqueue(new DisposeDataListener<ResponseCls<UserBean>>() {
+//
+//                    @Override
+//                    public void onSuccess(ResponseCls<UserBean> response) {
+//
+//                        Toast.makeText(MainActivity.this, response.getData().userId,Toast.LENGTH_SHORT).show();
+//
+//                    }
+//
+//                    @Override
+//                    public void onFailure(CommonHttpException e) {
+//                        super.onFailure(e);
+//
+//                        Toast.makeText(MainActivity.this, e.getEmsg().toString(),Toast.LENGTH_SHORT).show();
+//
+//                    }
+//
+//                });
 
-        MavoHttpClient.newBuilder()
-                .addParams(params)
-                .setContext(MainActivity.this)
-                .post()
-                .url("getUserInfo")
-                .build()
-                .enqueue(new DisposeDataListener<ResponseCls<UserBean>>() {
+        RestClient.builder("http://")
+                .addQueryParams("userId","123")
+                .addQueryParams("password", "234")
+                .get()
+                .enqueue(new DisposeDataListener<ResponseCls<FileInfo>>(){
 
                     @Override
-                    public void onSuccess(ResponseCls<UserBean> response) {
-
-                        Toast.makeText(MainActivity.this, response.getData().userId,Toast.LENGTH_SHORT).show();
-
+                    public void onSuccess(ResponseCls<FileInfo> fileInfoResponseCls) {
+                        super.onSuccess(fileInfoResponseCls);
                     }
 
                     @Override
-                    public void onFailure(ZirukHttpException e) {
+                    public void onFailure(CommonHttpException e) {
                         super.onFailure(e);
-
-                        Toast.makeText(MainActivity.this, e.getEmsg().toString(),Toast.LENGTH_SHORT).show();
-
                     }
 
                 });
+
+
     }
 
     public void FileChoose(View view){
@@ -93,36 +112,36 @@ public class MainActivity extends AppCompatActivity {
         //final HashMap<String, File> files = new HashMap<String, File>();
         File file = new File(filePath);
 
-        RequestParams params=new RequestParams();
-        params.put("userId", "123");
-        params.put("password", "123");
-        params.put("ID", "123");
-        params.put(StringUtils.substringAfterLast(filePath, "/"), file);
-
-        MavoHttpClient.newBuilder()
-                .addParams(params)
-                .setContext(MainActivity.this)
-                .postWithFiles()
-                .url("File/FileUpload")
-                .build()
-                .enqueue(new DisposeDataListener<List<FileInfo>>() {
-
-                    @Override
-                    public void onSuccess(List<FileInfo> response) {
-
-                        Toast.makeText(MainActivity.this, response.get(0).downlaodPathFile,Toast.LENGTH_SHORT).show();
-
-                    }
-
-                    @Override
-                    public void onFailure(ZirukHttpException e) {
-                        super.onFailure(e);
-
-                        Toast.makeText(MainActivity.this, "失败了"+e.getEmsg(),Toast.LENGTH_SHORT).show();
-
-                    }
-
-                });
+//        RequestParams params=new RequestParams();
+//        params.put("userId", "123");
+//        params.put("password", "123");
+//        params.put("ID", "123");
+//        params.put(StringUtils.substringAfterLast(filePath, "/"), file);
+//
+//        MavoHttpClient.newBuilder()
+//                .addParams(params)
+//                .setContext(MainActivity.this)
+//                .postWithFiles()
+//                .url("File/FileUpload")
+//                .build()
+//                .enqueue(new DisposeDataListener<List<FileInfo>>() {
+//
+//                    @Override
+//                    public void onSuccess(List<FileInfo> response) {
+//
+//                        Toast.makeText(MainActivity.this, response.get(0).downlaodPathFile,Toast.LENGTH_SHORT).show();
+//
+//                    }
+//
+//                    @Override
+//                    public void onFailure(CommonHttpException e) {
+//                        super.onFailure(e);
+//
+//                        Toast.makeText(MainActivity.this, "失败了"+e.getEmsg(),Toast.LENGTH_SHORT).show();
+//
+//                    }
+//
+//                });
 
 
     }

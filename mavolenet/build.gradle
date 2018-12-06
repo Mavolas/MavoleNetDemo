@@ -30,7 +30,9 @@ dependencies {
 
     api 'com.squareup.okhttp3:okhttp:3.10.0'
     api 'com.google.code.gson:gson:2.8.5'
+    api 'com.squareup.retrofit2:retrofit:2.3.0'
     api 'org.apache.commons:commons-lang3:3.7'
+    api 'com.squareup.retrofit2:converter-gson:2.0.2'
     //AVLoadingIndicatorView
 
 }

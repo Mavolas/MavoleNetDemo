@@ -2,7 +2,7 @@ package com.mavole.mavolenetdemo.application;
 
 import android.app.Application;
 
-import com.mavole.mavolenet.netconfig.MavoHttp;
+import com.mavole.mavolenet.configure.MavoHttpConfigure;
 
 /**
  * Created by 宋棋安
@@ -28,8 +28,9 @@ public class MyApplication extends Application {
 //                })
 //                .build();
 
-        MavoHttp.init(this)
+        MavoHttpConfigure.init(this)
                 .withApiHost("http://172.17.0.172:59596/api")
+                .withTimeOut(60)
                 .configure();
 
     }

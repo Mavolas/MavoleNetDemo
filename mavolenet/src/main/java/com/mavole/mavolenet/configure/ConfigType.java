@@ -1,4 +1,4 @@
-package com.mavole.mavolenet.netconfig;
+package com.mavole.mavolenet.configure;
 
 /**
  * Created by mavole
@@ -7,8 +7,9 @@ package com.mavole.mavolenet.netconfig;
 public enum ConfigType {
 
     APPLICATION_CONTEXT,
-    OKHTTPCLIENT,
     CONFIG_READY,
-    API_HOST
+    INTERCEPTOR,
+    API_HOST,
+    TIMEOUT
 
 }

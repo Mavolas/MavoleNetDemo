@@ -1,13 +1,13 @@
 package com.mavole.mavolenet.exception;
 
 
-public class ZirukHttpException {
+public class CommonHttpException {
 
 	private int ecode;
 
 	private Object emsg;
 
-	public ZirukHttpException(int ecode, Object emsg) {
+	public CommonHttpException(int ecode, Object emsg) {
 		this.ecode = ecode;
 		this.emsg = emsg;
 	}
