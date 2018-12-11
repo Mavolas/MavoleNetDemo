@@ -3,6 +3,7 @@ package com.mavole.mavolenet.common;
 import com.mavole.mavolenet.configure.ConfigType;
 import com.mavole.mavolenet.configure.MavoHttpConfigure;
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
 import java.util.WeakHashMap;
 import java.util.concurrent.TimeUnit;
 import okhttp3.Interceptor;
@@ -29,6 +30,11 @@ public class RestCreator {
         return ParamsHolder.QUERY_PARAMS;
     }
 
+    public static WeakHashMap<String , Object> getHeaderParams(){
+
+        return ParamsHolder.HEADER_PARAMS;
+    }
+
     public static RestService getRestService(){
 
         return RestServiceHolder.REST_SERVICE;
@@ -36,14 +42,14 @@ public class RestCreator {
 
     private static final class ParamsHolder{
 
-        public  static  final WeakHashMap<String ,Object> POST_PARAMS = new WeakHashMap<>(  );
-        public  static  final WeakHashMap<String ,Object> QUERY_PARAMS = new WeakHashMap<>(  );
+        public static final WeakHashMap<String ,Object> POST_PARAMS = new WeakHashMap<>(  );
+        public static final WeakHashMap<String ,Object> QUERY_PARAMS = new WeakHashMap<>(  );
+        public static final WeakHashMap<String ,Object> HEADER_PARAMS = new WeakHashMap<>(  );
     }
 
     private static final class RetrofitHolder{
 
         private static final String BASE_URL = (String) MavoHttpConfigure.getConfigurations().get( ConfigType.API_HOST.name());
-
         private static final Retrofit RETROFIT_CLIENT = new Retrofit.Builder()
                 .baseUrl( BASE_URL )
                 .client( OKHttpHolder.initialOkHttpClient() )
@@ -83,6 +89,5 @@ public class RestCreator {
         private static final RestService REST_SERVICE =
                 RetrofitHolder.RETROFIT_CLIENT.create( RestService.class );
     }
-
 
 }

@@ -10,6 +10,7 @@ import java.net.URLConnection;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -20,11 +21,11 @@ import okhttp3.RequestBody;
  */
 public class RestRequestBuilder {
 
-
     private String mUrl = null;
     private HttpMethod mMethod = null;
     private Map<String,Object> POST_PARAMS = RestCreator.getPostParams();
     private Map<String,Object> QUERY_PARAMS = RestCreator.getQueryParams();
+    private Map<String,Object> HEADER_PARAMS = RestCreator.getHeaderParams();
     private RequestBody mBody = null;
     Gson gs = new Gson();
 
@@ -56,26 +57,60 @@ public class RestRequestBuilder {
         return this;
     }
 
+    public final RestRequestBuilder addHeaders(WeakHashMap<String,Object> params){
+
+        this.HEADER_PARAMS.putAll( params );
+        return this;
+    }
+
+    public final RestRequestBuilder addHeaders(String key,Object value){
+
+        this.HEADER_PARAMS.put( key,value );
+        return this;
+    }
+
+    //get
     public final RestClient get(){
         mMethod = HttpMethod.GET;
         RestClient client = build();
         return client;
     }
 
-
-    public final RestClient postWithFiles(){
-        mMethod = HttpMethod.POST_WITH_FILES;
-        this.mBody = buildMultiPostRequest();
+    //post with urlencoded
+    public final RestClient post(){
+        mMethod = HttpMethod.POST;
+        this.mBody = buildFormEncodingBody();
         RestClient client = build();
         return client;
     }
 
+    //put with json
+    public final RestClient put(){
+        mMethod = HttpMethod.PUT;
+        this.mBody = buidJsonBody();
+        RestClient client = build();
+        return client;
+    }
 
+    //delete
+    public final RestClient delete(){
+        mMethod = HttpMethod.DELETE;
+        RestClient client = build();
+        return client;
+    }
+
+    //post file or mutipart
+    public final RestClient postWithFiles(){
+        mMethod = HttpMethod.POST_WITH_FILES;
+        this.mBody = buildMultiPostRequestBody();
+        RestClient client = build();
+        return client;
+    }
+
+    //post json raw
     public final RestClient postJson(){
-
         mMethod = HttpMethod.POST_JSON;
-        String jsonStr = gs.toJson(POST_PARAMS);
-        this.mBody = RequestBody.create( MediaType.parse( "application/json;charset=UTF-8" ) ,jsonStr);
+        this.mBody = buidJsonBody();
         RestClient client = build();
         return client;
     }
@@ -92,7 +127,22 @@ public class RestRequestBuilder {
         return urlBuilder.substring(0, urlBuilder.length() - 1);
     }
 
-    private  RequestBody buildMultiPostRequest() {
+    private RequestBody buidJsonBody(){
+        String jsonStr = gs.toJson(POST_PARAMS);
+        return  RequestBody.create( MediaType.parse( "application/json;charset=UTF-8" ) ,jsonStr);
+    }
+
+    private RequestBody buildFormEncodingBody(){
+
+        FormBody.Builder builder = new FormBody.Builder();
+        for (String key : POST_PARAMS.keySet()) {
+            builder.add(key, POST_PARAMS.get(key).toString());
+        }
+        return builder.build();
+
+    }
+
+    private  RequestBody buildMultiPostRequestBody() {
 
         MultipartBody.Builder requestBody = new MultipartBody.Builder();
         requestBody.setType(MultipartBody.FORM);
@@ -128,16 +178,10 @@ public class RestRequestBuilder {
         return contentType;
     }
 
-
     private final RestClient build(){
 
         mUrl = buildQueryUrl();
-
-        return new RestClient(mUrl, mMethod, mBody );
-
+        return new RestClient(mUrl, mMethod, mBody, HEADER_PARAMS );
     }
-    
-    
-
 
 }

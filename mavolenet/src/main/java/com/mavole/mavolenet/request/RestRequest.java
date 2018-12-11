@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.Map;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -35,20 +36,31 @@ public class RestRequest {
     private static final int JSON_ERROR = -2; // the JSON relative error
     private static Gson mGs = new Gson();
 
-    public static void request(HttpMethod method, String url, RequestBody body, final DisposeDataListener callback){
+    public static void request(HttpMethod method, String url
+            ,RequestBody body, Map<String, Object> header
+            ,final DisposeDataListener callback){
 
         final RestService service = RestCreator.getRestService();
         Call<String> call = null;
 
         switch (method){
             case GET:
-                call = service.get( url );
+                call = service.get( url, header );
                 break;
             case POST_JSON:
-                call = service.postJson( url, body );
+                call = service.postJson( url, body, header );
                 break;
             case POST_WITH_FILES:
-                call = service.postWithFile( url, body );
+                call = service.postWithFile( url, body, header );
+                break;
+            case POST:
+                call = service.post( url, body, header );
+                break;
+            case PUT:
+                call = service.put( url, body, header );
+                break;
+            case DELETE:
+                call = service.delete( url, header );
                 break;
             default:
                 break;

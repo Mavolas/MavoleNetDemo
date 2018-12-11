@@ -5,6 +5,8 @@ import com.mavole.mavolenet.common.HttpMethod;
 import com.mavole.mavolenet.common.RestRequestBuilder;
 import com.mavole.mavolenet.request.RestRequest;
 
+import java.util.Map;
+
 import okhttp3.RequestBody;
 
 /**
@@ -16,11 +18,13 @@ public class RestClient {
     private String mUrl = null;
     private HttpMethod mMethod = null;
     private RequestBody mBody = null;
+    private Map<String, Object> mHeader = null;
 
-    public RestClient(String url, HttpMethod method, RequestBody body) {
-        mUrl = url;
-        mMethod = method;
-        mBody = body;
+    public RestClient(String url, HttpMethod method, RequestBody body, Map<String, Object> header ) {
+        this.mUrl = url;
+        this.mMethod = method;
+        this.mBody = body;
+        this.mHeader = header;
     }
 
     public static RestRequestBuilder builder(String url){
@@ -32,17 +36,25 @@ public class RestClient {
 
         switch (mMethod) {
             case GET:
-                RestRequest.request(HttpMethod.GET, mUrl, mBody, callback);
+                RestRequest.request(HttpMethod.GET, mUrl, mBody, mHeader, callback);
                 break;
             case POST_JSON:
-                RestRequest.request(HttpMethod.POST_JSON, mUrl, mBody, callback);
+                RestRequest.request(HttpMethod.POST_JSON, mUrl, mBody, mHeader, callback);
                 break;
             case POST_WITH_FILES:
-                RestRequest.request(HttpMethod.POST_WITH_FILES, mUrl, mBody, callback);
+                RestRequest.request(HttpMethod.POST_WITH_FILES, mUrl, mBody, mHeader, callback);
+                break;
+            case POST:
+                RestRequest.request(HttpMethod.POST, mUrl, mBody, mHeader, callback);
+                break;
+            case PUT:
+                RestRequest.request(HttpMethod.PUT, mUrl, mBody, mHeader, callback);
+                break;
+            case DELETE:
+                RestRequest.request(HttpMethod.DELETE, mUrl, mBody, mHeader, callback);
                 break;
             default:
                 break;
-
         }
     }
 }

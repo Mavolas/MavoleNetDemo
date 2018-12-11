@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void PostJson(View view){
 
-
         RestClient.builder("DataSynch/Download")
                 .addQueryParams("userId","test")
                 .addQueryParams("password", "test")

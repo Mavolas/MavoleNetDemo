@@ -9,7 +9,9 @@ import retrofit2.http.PUT;
  */
 public enum HttpMethod {
     GET,
-    POST_JSON,
+    POST,      //post urlencoded
+    POST_JSON, //post raw json
     POST_WITH_FILES,
-
+    PUT,
+    DELETE
 }

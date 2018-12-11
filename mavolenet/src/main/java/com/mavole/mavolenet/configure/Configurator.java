@@ -61,9 +61,8 @@ public class Configurator {
     }
 
     public final Configurator withApiHost(String host){
-
-        MAVO_CONFIGS.put( ConfigType.API_HOST.name(),host );
-
+        String validHost = FormatBaseUrl(host);
+        MAVO_CONFIGS.put( ConfigType.API_HOST.name(), validHost );
         return this;
     }
 
@@ -93,6 +92,14 @@ public class Configurator {
     public final Configurator withOKHttpClient(OkHttpClient okHttpClient){
         MAVO_CONFIGS.put( ConfigType.OKHTTP_CLIENT.name(), okHttpClient );
         return this;
+    }
+
+    private static String FormatBaseUrl(String baseUrl){
+        if (baseUrl.endsWith("/")){
+            return baseUrl;
+        }else {
+            return baseUrl + "/";
+        }
     }
 
 }
