@@ -13,5 +13,6 @@ public enum HttpMethod {
     POST_JSON, //post raw json
     POST_WITH_FILES,
     PUT,
-    DELETE
+    DELETE,
+    DOWNLOAD
 }

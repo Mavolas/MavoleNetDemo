@@ -5,9 +5,9 @@ public class CommonHttpException {
 
 	private int ecode;
 
-	private Object emsg;
+	private String emsg;
 
-	public CommonHttpException(int ecode, Object emsg) {
+	public CommonHttpException(int ecode, String emsg) {
 		this.ecode = ecode;
 		this.emsg = emsg;
 	}
@@ -16,7 +16,7 @@ public class CommonHttpException {
 		return ecode;
 	}
 
-	public Object getEmsg() {
+	public String getEmsg() {
 		return emsg;
 	}
 }

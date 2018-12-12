@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mavole.mavolenet.callback.DisposeDataListener;
 import com.mavole.mavolenet.common.HttpMethod;
+import com.mavole.mavolenet.common.RequestConstant;
 import com.mavole.mavolenet.common.RestCreator;
 import com.mavole.mavolenet.common.RestService;
 import com.mavole.mavolenet.exception.CommonHttpException;
@@ -28,12 +29,8 @@ import retrofit2.Response;
  */
 public class RestRequest {
 
-    private static String DateTimeFormatString_Android2Service = "yyyy-MM-dd HH:mm:ss.SSS";
-    private static JsonDateType _jsonDateType = JsonDateType.fixFormatStr;
-    private static String DateTimeFormatString_Service2Android = "yyyy-MM-dd HH:mm:ss.SSS";
 
-    private static final int NETWORK_ERROR = -1; // the network relative error
-    private static final int JSON_ERROR = -2; // the JSON relative error
+    private static JsonDateType _jsonDateType = JsonDateType.fixFormatStr;
     private static Gson mGs = new Gson();
 
     public static void request(HttpMethod method, String url
@@ -87,21 +84,21 @@ public class RestRequest {
                                 JSONObject result = new JSONObject(response.body());
                                 callback.onSuccess(mGs.fromJson(response.body(), callback.mType));
                             }catch (JSONException e){
-                                callback.onFailure(new CommonHttpException(JSON_ERROR, e.getMessage()));
+                                callback.onFailure(new CommonHttpException(RequestConstant.JSON_ERROR, e.getMessage()));
                             }
                         }
                     }else {
-                        callback.onFailure(new CommonHttpException(NETWORK_ERROR, response.message()+" code:"+ response.code()));
+                        callback.onFailure(new CommonHttpException(response.code(), response.message()));
                     }
 
                 }else {
-                    callback.onFailure(new CommonHttpException(NETWORK_ERROR, response.message()+" code:"+ response.code()));
+                    callback.onFailure(new CommonHttpException(response.code(), response.message()));
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                callback.onFailure(new CommonHttpException(NETWORK_ERROR, t.getMessage()));
+                callback.onFailure(new CommonHttpException(RequestConstant.NETWORK_ERROR, t.getMessage()));
             }
         });
 
@@ -109,6 +106,6 @@ public class RestRequest {
 
     //region 获取解析日期Json字符串
     public static String GetJsonDateParseStr(){
-        return DateTimeFormatString_Service2Android;
+        return RequestConstant.DateTimeFormatString_Service2Android;
     }
 }

@@ -1,27 +1,22 @@
 package com.mavole.mavolenetdemo;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.mavole.mavolenet.RestClient;
 import com.mavole.mavolenet.callback.DisposeDataListener;
-import com.mavole.mavolenet.configure.ConfigType;
-import com.mavole.mavolenet.configure.MavoHttpConfigure;
+import com.mavole.mavolenet.callback.DownloadListener;
 import com.mavole.mavolenet.exception.CommonHttpException;
 import com.mavole.mavolenet.model.FileBean;
 import com.mavole.mavolenet.model.ResponseCls;
-import com.mavole.mavolenetdemo.bean.FileInfo;
 import com.mavole.mavolenetdemo.bean.UserBean;
-
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Date;
-import java.util.List;
 
 import cn.finalteam.rxgalleryfinal.RxGalleryFinalApi;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultDisposable;
@@ -128,6 +123,39 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 });
+
+
+        RestClient.builder("DataSynch/upLoadFiles")
+                .addQueryParams("userId","test")
+                .addQueryParams("userId","test")
+                .downloadConfig()
+                .download(new DownloadListener() {
+                    @Override
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onProgress(Integer progress, Integer total, Integer downed) {
+
+                    }
+
+                    @Override
+                    public void onFinish(String path) {
+
+                    }
+
+                    @Override
+                    public void onFailure(CommonHttpException exception) {
+
+                    }
+
+                    @Override
+                    public void onEnd() {
+
+                    }
+                });
+
 
     }
 

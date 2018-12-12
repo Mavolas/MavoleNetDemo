@@ -27,6 +27,8 @@ public class RestRequestBuilder {
     private Map<String,Object> QUERY_PARAMS = RestCreator.getQueryParams();
     private Map<String,Object> HEADER_PARAMS = RestCreator.getHeaderParams();
     private RequestBody mBody = null;
+    private String mDownLoad_Dir = null;
+    private String mDownLoad_File_FullName = null;
     Gson gs = new Gson();
 
     public RestRequestBuilder(String url){
@@ -115,6 +117,22 @@ public class RestRequestBuilder {
         return client;
     }
 
+    public final RestClient downloadConfig(){
+        this.mDownLoad_Dir = RequestConstant.DOWNLOAD_DIR;
+        this.mDownLoad_File_FullName = RequestConstant.DOWNLOAD_APK_FULLNAME;
+        mMethod = HttpMethod.DOWNLOAD;
+        RestClient client = build();
+        return client;
+    }
+
+    public final RestClient downloadConfig(String download_dir, String fullName){
+        this.mDownLoad_Dir = download_dir;
+        this.mDownLoad_File_FullName = fullName;
+        mMethod = HttpMethod.DOWNLOAD;
+        RestClient client = build();
+        return client;
+    }
+
 
     private String buildQueryUrl(){
 
@@ -181,7 +199,7 @@ public class RestRequestBuilder {
     private final RestClient build(){
 
         mUrl = buildQueryUrl();
-        return new RestClient(mUrl, mMethod, mBody, HEADER_PARAMS );
+        return new RestClient(mUrl, mMethod, mBody, HEADER_PARAMS, mDownLoad_Dir, mDownLoad_File_FullName);
     }
 
 }

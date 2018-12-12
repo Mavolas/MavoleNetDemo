@@ -19,7 +19,6 @@ public class RestCreator {
 
     private static final int DEFAULT_TIME_OUT = 20;
 
-
     public static WeakHashMap<String , Object> getPostParams(){
 
        return ParamsHolder.POST_PARAMS;

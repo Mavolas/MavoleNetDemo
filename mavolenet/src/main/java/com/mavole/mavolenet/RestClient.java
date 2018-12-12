@@ -1,8 +1,10 @@
 package com.mavole.mavolenet;
 
 import com.mavole.mavolenet.callback.DisposeDataListener;
+import com.mavole.mavolenet.callback.DownloadListener;
 import com.mavole.mavolenet.common.HttpMethod;
 import com.mavole.mavolenet.common.RestRequestBuilder;
+import com.mavole.mavolenet.download.DownloadHandler;
 import com.mavole.mavolenet.request.RestRequest;
 
 import java.util.Map;
@@ -19,12 +21,16 @@ public class RestClient {
     private HttpMethod mMethod = null;
     private RequestBody mBody = null;
     private Map<String, Object> mHeader = null;
+    private String mDownLoad_Dir = null;
+    private String mDownLoad_File_FullName = null;
 
-    public RestClient(String url, HttpMethod method, RequestBody body, Map<String, Object> header ) {
+    public RestClient(String url, HttpMethod method, RequestBody body, Map<String, Object> header ,String downloadDir, String fullName) {
         this.mUrl = url;
         this.mMethod = method;
         this.mBody = body;
         this.mHeader = header;
+        this.mDownLoad_Dir = downloadDir;
+        this.mDownLoad_File_FullName = fullName;
     }
 
     public static RestRequestBuilder builder(String url){
@@ -32,7 +38,7 @@ public class RestClient {
         return new RestRequestBuilder(url);
     }
 
-    public void enqueue(DisposeDataListener callback) {
+    public void enqueue( DisposeDataListener callback) {
 
         switch (mMethod) {
             case GET:
@@ -56,5 +62,10 @@ public class RestClient {
             default:
                 break;
         }
+    }
+
+    public void download( DownloadListener callback) {
+
+        new DownloadHandler(mUrl, mDownLoad_Dir, mDownLoad_File_FullName, callback).HandleDownload();
     }
 }
