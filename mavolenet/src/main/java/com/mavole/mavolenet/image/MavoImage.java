@@ -4,7 +4,6 @@ import android.content.Context;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.mavole.mavolenet.R;
 import com.mavole.mavolenet.configure.ConfigType;
 import com.mavole.mavolenet.configure.MavoHttpConfigure;
@@ -17,24 +16,14 @@ public class MavoImage {
 
     private static String BASE_URL = (String) MavoHttpConfigure.getConfigurations().get( ConfigType.API_HOST.name());
 
-    private static RequestOptions getPlaceholder = new RequestOptions()
-            .placeholder(R.drawable.pic_loading)
-            .fallback(R.drawable.pic_load_error)
-            //.diskCacheStrategy(DiskCacheStrategy.NONE); //禁用掉Glide的硬盘缓存功能了
-            //.skipMemoryCache(true) //禁用内存缓存
-            .error(R.drawable.pic_load_fail)
-            .fitCenter();
-    private static RequestOptions getThumbnail = new RequestOptions()
-            .override(200, 200);
-
-
     public static void loadImage(Context context, String url, ImageView imageView){
         url = FormatUrl(url);
         Glide.with(context)
                 .load(url)
-                .apply(getPlaceholder)
+                .placeholder(R.drawable.pic_loading)
+                .fallback(R.drawable.pic_load_error)
+                .error(R.drawable.pic_load_fail)
                 .into(imageView);
-
     }
 
     public static void loadImage(String url, ImageView imageView){
@@ -42,7 +31,9 @@ public class MavoImage {
         Context context = MavoHttpConfigure.getApplicationContext();
         Glide.with(context)
                 .load(url)
-                .apply(getPlaceholder)
+                .placeholder(R.drawable.pic_loading)
+                .fallback(R.drawable.pic_load_error)
+                .error(R.drawable.pic_load_fail)
                 .into(imageView);
     }
 
@@ -51,8 +42,10 @@ public class MavoImage {
         url = FormatUrl(url);
         Glide.with(context)
                 .load(url)
-                .apply(getPlaceholder)
-                .apply(getThumbnail)
+                .placeholder(R.drawable.pic_loading)
+                .fallback(R.drawable.pic_load_error)
+                .error(R.drawable.pic_load_fail)
+                .override(200, 200)
                 .into(imageView);
     }
 
@@ -62,7 +55,6 @@ public class MavoImage {
         if (BASE_URL.endsWith("api/")){
             BASE_URL = BASE_URL.replace("api/", "");
         }
-
         //根据情况返回正确的uri
         if (url.contains("http://") || url.contains("https://")){
             return url;
@@ -73,7 +65,5 @@ public class MavoImage {
         }else {
             return BASE_URL + url;
         }
-
     }
-
 }
