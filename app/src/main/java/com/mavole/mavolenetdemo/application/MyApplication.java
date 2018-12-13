@@ -14,24 +14,9 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-//        //配置网络框架的参数
-//        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-//                .connectTimeout(10000L, TimeUnit.MILLISECONDS)
-//                .readTimeout(10000L, TimeUnit.MILLISECONDS)
-//                .hostnameVerifier(new HostnameVerifier()
-//                {
-//                    @Override
-//                    public boolean verify(String hostname, SSLSession session)
-//                    {
-//                        return true;
-//                    }
-//                })
-//                .build();
-
         MavoHttpConfigure.init(this)
                 .withApiHost("http://172.17.0.172:49842/api/")
                 .withTimeOut(40)
                 .configure();
-
     }
 }

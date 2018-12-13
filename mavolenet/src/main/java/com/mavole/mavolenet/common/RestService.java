@@ -26,7 +26,6 @@ public interface RestService {
     @GET
     Call<String> get(@Url String url, @HeaderMap Map<String, Object> header);
 
-    @FormUrlEncoded
     @POST
     Call<String> post(@Url String url , @Body RequestBody body, @HeaderMap Map<String, Object> header );
 

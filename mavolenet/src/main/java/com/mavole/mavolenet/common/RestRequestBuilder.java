@@ -133,7 +133,6 @@ public class RestRequestBuilder {
         return client;
     }
 
-
     private String buildQueryUrl(){
 
         StringBuilder urlBuilder = new StringBuilder(mUrl).append("?");
@@ -165,22 +164,18 @@ public class RestRequestBuilder {
         MultipartBody.Builder requestBody = new MultipartBody.Builder();
         requestBody.setType(MultipartBody.FORM);
         if ( POST_PARAMS != null) {
-
             for (Map.Entry<String, Object> entry : POST_PARAMS.entrySet()) {
 
                 if (entry.getValue() instanceof File) {
-
                     String fileType = getMimeType(entry.getKey());
                     requestBody.addFormDataPart(entry.getKey(),entry.getKey(), RequestBody.create(MediaType.parse(fileType), (File) entry.getValue()));
-
                 }else if (entry.getValue() instanceof FileBean) {
-
                     String fileType = getMimeType(entry.getKey());
                     requestBody.addFormDataPart( ((FileBean)entry.getValue()).key ,((FileBean)entry.getValue()).fileName, RequestBody.create(MediaType.parse(fileType), ((FileBean) entry.getValue()).file));
-
-                } else if (entry.getValue() instanceof String) {
-
+                }else if (entry.getValue() instanceof String) {
                     requestBody.addFormDataPart( entry.getKey(), (String) entry.getValue());
+                }else {
+                    requestBody.addFormDataPart( entry.getKey(),  entry.getValue().toString());
                 }
             }
         }

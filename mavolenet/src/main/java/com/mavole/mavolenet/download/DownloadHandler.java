@@ -45,17 +45,24 @@ public class DownloadHandler {
 
                         if ( response.isSuccessful() ){
                             final ResponseBody responseBody = response.body();
-                            final SaveFileTask task = new SaveFileTask( mListener );
-                            task.executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR,responseBody,DOWNLOAD_DIR,mFullName );
-                            //这里一定要注意判断，可能文件下载不全
-                            if ( task.isCancelled() ){
-                                if ( mListener != null ){
-                                    mListener.onEnd();
+
+                            if (responseBody !=null && responseBody.contentLength() > 0) {
+                                final SaveFileTask task = new SaveFileTask(mListener);
+                                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, responseBody, DOWNLOAD_DIR, mFullName);
+                                //这里一定要注意判断，可能文件下载不全
+                                if (task.isCancelled()) {
+                                    if (mListener != null) {
+                                        mListener.onEnd();
+                                    }
                                 }
+                            }else {
+                                mListener.onFailure( new CommonHttpException( response.code(), "file content is null!" ) );
+                                mListener.onEnd();
                             }
                         }else {
                             if ( mListener != null ){
                                 mListener.onFailure( new CommonHttpException( response.code(), response.message() ) );
+                                mListener.onEnd();
                             }
                         }
                     }
@@ -63,6 +70,7 @@ public class DownloadHandler {
                     public void onFailure(Call <ResponseBody> call, Throwable t) {
                         if ( mListener != null ){
                             mListener.onFailure(new CommonHttpException(RequestConstant.NETWORK_ERROR, t.getMessage()));
+                            mListener.onEnd();
                         }
                     }
                 } );

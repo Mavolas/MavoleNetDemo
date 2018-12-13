@@ -6,7 +6,7 @@ import com.mavole.mavolenet.exception.CommonHttpException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-public class DisposeDataListener<T> {
+public abstract class DisposeDataListener<T> {
 
     public static Type mType;
 
@@ -14,9 +14,9 @@ public class DisposeDataListener<T> {
         mType = getSuperclassTypeParameter(this.getClass());
     }
 
-    public void onSuccess(T t){}
+    public abstract void onSuccess(T response);
 
-    public void onFailure(CommonHttpException e){}
+    public abstract void onFailure(CommonHttpException e);
 
     static Type getSuperclassTypeParameter(Class<?> subclass) {
         Type superclass = subclass.getGenericSuperclass();

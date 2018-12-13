@@ -60,7 +60,7 @@ public class SaveFileTask extends AsyncTask<Object,Integer,File> {
         if ( mListener != null && file != null ){
             mListener.onFinish( file.getPath() );
         }
-        if ( mListener != null && file != null ){
+        if ( mListener != null ){
             mListener.onEnd();
         }
     }
@@ -104,6 +104,7 @@ public class SaveFileTask extends AsyncTask<Object,Integer,File> {
 
             // 获取文件大小
             long fileSize = body.contentLength();
+
             long fileSizeDownloaded = 0;
 
             is = body.byteStream();
@@ -121,8 +122,6 @@ public class SaveFileTask extends AsyncTask<Object,Integer,File> {
             while (true) {
                 int read = bis.read(data);
                 if (read == -1) {
-                    // 下载完成
-                    mListener.onFinish(file.getPath());
                     break;
                 }
                 bos.write(data, 0, read);

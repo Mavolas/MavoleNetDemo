@@ -4,24 +4,36 @@ import java.util.Date;
 
 public class UserBean {
 
-    public String UserName;
+    public String key;
 
-    public String PassWord;
+    public String phone;
 
-    public String Flag;
+    public String name;
 
-    public Date BirtyDay;
+    public String passwd;
 
-    public int Age;
+    public String text;
+
+    public String img;
+
+    public String other;
+
+    public String other2;
+
+    public Date createTime;
 
     @Override
     public String toString() {
         return "UserBean{" +
-                "UserName='" + UserName + '\'' +
-                ", PassWord='" + PassWord + '\'' +
-                ", Flag='" + Flag + '\'' +
-                ", BirtyDay=" + BirtyDay +
-                ", Age=" + Age +
+                "key='" + key + '\'' +
+                ", phone='" + phone + '\'' +
+                ", name='" + name + '\'' +
+                ", passwd='" + passwd + '\'' +
+                ", text='" + text + '\'' +
+                ", img='" + img + '\'' +
+                ", other='" + other + '\'' +
+                ", other2='" + other2 + '\'' +
+                ", createTime=" + createTime +
                 '}';
     }
 }
