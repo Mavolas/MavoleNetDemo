@@ -82,7 +82,7 @@ public class RestRequest {
                                     mGs = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDateDeserializer_FixFormat()).create();
                                 //判断解析是否正确
                                 JSONObject result = new JSONObject(response.body());
-                                callback.onSuccess(mGs.fromJson(response.body(), callback.mType));
+                                callback.onSuccess(      mGs.fromJson(response.body(), callback.mType));
                             }catch (JSONException e){
                                 callback.onFailure(new CommonHttpException(RequestConstant.JSON_ERROR, e.getMessage()));
                             }
