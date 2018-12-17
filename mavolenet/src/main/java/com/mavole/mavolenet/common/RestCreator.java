@@ -1,9 +1,9 @@
 package com.mavole.mavolenet.common;
 
 import com.mavole.mavolenet.configure.ConfigType;
-import com.mavole.mavolenet.configure.MavoHttpConfigure;
+import com.mavole.mavolenet.configure.RestHttpConfigure;
+
 import java.util.ArrayList;
-import java.util.IdentityHashMap;
 import java.util.WeakHashMap;
 import java.util.concurrent.TimeUnit;
 import okhttp3.Interceptor;
@@ -48,7 +48,7 @@ public class RestCreator {
 
     private static final class RetrofitHolder{
 
-        private static final String BASE_URL = (String) MavoHttpConfigure.getConfigurations().get( ConfigType.API_HOST.name());
+        private static final String BASE_URL = (String) RestHttpConfigure.getConfigurations().get( ConfigType.API_HOST.name());
         private static final Retrofit RETROFIT_CLIENT = new Retrofit.Builder()
                 .baseUrl( BASE_URL )
                 .client( OKHttpHolder.initialOkHttpClient() )
@@ -61,9 +61,9 @@ public class RestCreator {
 
         private static OkHttpClient initialOkHttpClient(){
 
-             final OkHttpClient OKHTTPCLIENT = MavoHttpConfigure.getConfiguration(ConfigType.OKHTTP_CLIENT );
-             final Integer TIMEOUT = MavoHttpConfigure.getConfiguration( ConfigType.TIMEOUT);
-             final ArrayList<Interceptor> INTERCEPTORS = MavoHttpConfigure.getConfiguration(ConfigType.INTERCEPTOR );
+             final OkHttpClient OKHTTPCLIENT = RestHttpConfigure.getConfiguration(ConfigType.OKHTTP_CLIENT );
+             final Integer TIMEOUT = RestHttpConfigure.getConfiguration( ConfigType.TIMEOUT);
+             final ArrayList<Interceptor> INTERCEPTORS = RestHttpConfigure.getConfiguration(ConfigType.INTERCEPTOR );
 
              if (OKHTTPCLIENT != null) {
                  return OKHTTPCLIENT;

@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 
 import com.mavole.mavolenet.callback.DownloadListener;
 import com.mavole.mavolenet.common.RequestConstant;
-import com.mavole.mavolenet.configure.MavoHttpConfigure;
+import com.mavole.mavolenet.configure.RestHttpConfigure;
 import com.mavole.mavolenet.exception.CommonHttpException;
 import com.mavole.mavolenet.util.FileUtil;
 
@@ -81,7 +81,7 @@ public class SaveFileTask extends AsyncTask<Object,Integer,File> {
             install.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
             install.setAction( Intent.ACTION_VIEW );
             install.setDataAndType( Uri.fromFile( file ),"application/vnd.android.package-archive" );
-            MavoHttpConfigure.getApplicationContext().startActivity( install );
+            RestHttpConfigure.getApplicationContext().startActivity( install );
 
         }
 

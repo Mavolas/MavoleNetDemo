@@ -24,7 +24,7 @@ public class RestClient {
     private String mDownLoad_Dir = null;
     private String mDownLoad_File_FullName = null;
 
-    public RestClient(String url, HttpMethod method, RequestBody body, Map<String, Object> header ,String downloadDir, String fullName) {
+    public RestClient(String url, HttpMethod method, RequestBody body, Map<String, Object> header , String downloadDir, String fullName) {
         this.mUrl = url;
         this.mMethod = method;
         this.mBody = body;

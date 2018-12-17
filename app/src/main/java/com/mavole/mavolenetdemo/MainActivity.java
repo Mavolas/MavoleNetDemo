@@ -1,6 +1,5 @@
 package com.mavole.mavolenetdemo;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,8 +18,6 @@ import com.mavole.mavolenetdemo.bean.ResClass;
 import com.mavole.mavolenetdemo.bean.UserBean;
 import com.mavole.mavolenetdemo.bean.WeatherResult;
 import com.mavole.mavolenetdemo.util.Constant;
-
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;

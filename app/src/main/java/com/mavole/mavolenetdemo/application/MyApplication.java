@@ -2,7 +2,7 @@ package com.mavole.mavolenetdemo.application;
 
 import android.app.Application;
 
-import com.mavole.mavolenet.configure.MavoHttpConfigure;
+import com.mavole.mavolenet.configure.RestHttpConfigure;
 
 /**
  * Created by 宋棋安
@@ -14,7 +14,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        MavoHttpConfigure.init(this)
+        RestHttpConfigure.init(this)
                 .withApiHost("http://172.17.0.172:49842/api/")
                 .withTimeOut(40)
                 .configure();

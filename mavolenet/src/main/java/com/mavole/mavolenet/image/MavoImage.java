@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.mavole.mavolenet.R;
 import com.mavole.mavolenet.configure.ConfigType;
-import com.mavole.mavolenet.configure.MavoHttpConfigure;
+import com.mavole.mavolenet.configure.RestHttpConfigure;
 
 /**
  * Author by Andy
@@ -14,7 +14,7 @@ import com.mavole.mavolenet.configure.MavoHttpConfigure;
  */
 public class MavoImage {
 
-    private static String BASE_URL = (String) MavoHttpConfigure.getConfigurations().get( ConfigType.API_HOST.name());
+    private static String BASE_URL = (String) RestHttpConfigure.getConfigurations().get( ConfigType.API_HOST.name());
 
     public static void loadImage(Context context, String url, ImageView imageView){
         url = FormatUrl(url);
@@ -28,7 +28,7 @@ public class MavoImage {
 
     public static void loadImage(String url, ImageView imageView){
         url = FormatUrl(url);
-        Context context = MavoHttpConfigure.getApplicationContext();
+        Context context = RestHttpConfigure.getApplicationContext();
         Glide.with(context)
                 .load(url)
                 .placeholder(R.drawable.pic_loading)

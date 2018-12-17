@@ -8,7 +8,7 @@ import java.util.HashMap;
  * Created by mavole
  * on {2018-11-04}.
  */
-public class MavoHttpConfigure {
+public class RestHttpConfigure {
 
     //initial
     public static Configurator init(Context context){
