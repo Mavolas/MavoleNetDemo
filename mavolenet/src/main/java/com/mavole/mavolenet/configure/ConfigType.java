@@ -10,6 +10,7 @@ public enum ConfigType {
     CONFIG_READY,
     OKHTTP_CLIENT,
     INTERCEPTOR,
+    IS_SHOW_MESSAGE_FAIL,
     API_HOST,
     TIMEOUT
 

@@ -1,5 +1,7 @@
 package com.mavole.mavolenet.request;
 
+import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mavole.mavolenet.callback.DisposeDataListener;
@@ -7,6 +9,8 @@ import com.mavole.mavolenet.common.HttpMethod;
 import com.mavole.mavolenet.common.RequestConstant;
 import com.mavole.mavolenet.common.RestCreator;
 import com.mavole.mavolenet.common.RestService;
+import com.mavole.mavolenet.configure.ConfigType;
+import com.mavole.mavolenet.configure.RestHttpConfigure;
 import com.mavole.mavolenet.exception.CommonHttpException;
 import com.mavole.mavolenet.json.JsonDateDeserializer_FixFormat;
 import com.mavole.mavolenet.json.JsonDateDeserializer_SlashDataNumberSlash;
@@ -82,7 +86,31 @@ public class RestRequest {
                                     mGs = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDateDeserializer_FixFormat()).create();
                                 //判断解析是否正确
                                 JSONObject result = new JSONObject(response.body());
-                                callback.onSuccess(      mGs.fromJson(response.body(), callback.mType));
+                                if ( RestHttpConfigure.getConfigurations().get( ConfigType.IS_SHOW_MESSAGE_FAIL.name() ) != null ){
+                                    Boolean showMessageWhenFail = (Boolean) RestHttpConfigure
+                                            .getConfigurations().get( ConfigType.IS_SHOW_MESSAGE_FAIL.name());
+                                    if (showMessageWhenFail){
+                                        int code = result.getInt("code");
+                                        switch (code) {
+                                            case 1:
+                                                Toast.makeText(RestHttpConfigure.getApplicationContext(),
+                                                        "账号或者密码不正确！请重新登陆系统后再次操作！", Toast.LENGTH_SHORT).show();
+                                                break;
+                                            case 2:
+                                                Toast.makeText(RestHttpConfigure.getApplicationContext(),
+                                                        "账号或者密码不正确！请重新登陆系统后再次操作！", Toast.LENGTH_SHORT).show();
+                                                break;
+                                            case 9:
+                                                Toast.makeText(RestHttpConfigure.getApplicationContext(),
+                                                        "系统出现未知错误，请联系系统管理员！",Toast.LENGTH_SHORT).show();
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                }
+
+                                callback.onSuccess(  mGs.fromJson(response.body(), callback.mType));
                             }catch (JSONException e){
                                 callback.onFailure(new CommonHttpException(RequestConstant.JSON_ERROR, e.getMessage()));
                             }

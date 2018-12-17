@@ -94,6 +94,12 @@ public class Configurator {
         return this;
     }
 
+
+    public final Configurator withIsShowMessageFailed(Boolean isShow){
+        MAVO_CONFIGS.put( ConfigType.IS_SHOW_MESSAGE_FAIL.name(),isShow );
+        return this;
+    }
+
     private static String FormatBaseUrl(String baseUrl){
         if (baseUrl.endsWith("/")){
             return baseUrl;
